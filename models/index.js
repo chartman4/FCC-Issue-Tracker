@@ -21,4 +21,3 @@ db.once('open', function () {
 });
 
 module.exports.Project = require("./project");
-module.exports.Issue = require("./issue");
