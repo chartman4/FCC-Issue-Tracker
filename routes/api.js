@@ -172,41 +172,35 @@ module.exports = function (app) {
 
     .delete(function (req, res) {
       var projectName = req.params.project;
-      console.log("DELETE");
-      console.log(projectName);
-      db.Project.findOne(
-        { id: projectName },
-        function (err, project) {
-          // As always, handle any potential errors:
+      var issueIdPassed = req.body;
+      try {
+        db.Project.findOne(
+          { id: projectName },
+          function (err, project) {
+            // As always, handle any potential errors:
 
-          if (err) { return res.status(500).send(err); }
-          else {
-            var issueIdPassed = req.body;
-            console.log(issueIdPassed);
-            if (Object.keys(issueIdPassed).length === 0) {
-              console.log("no issueId");
-              res.status(200).send("_id error")
-            } else {
-              var response = "looking"
+            if (err) { return res.status(500).send(err); }
+            else {
+              if (Object.keys(issueIdPassed).length === 0) {
+                console.log("no issueId");
+                res.status(200).send("_id error")
+              } else {
+                let v = project.issues.findIndex((elem) => {
+                  return elem._id.toString() === issueIdPassed._id;
+                });
+                var newIssues = project.issues.filter(function (value, index, arr) {
+                  return v !== index;
+                });
+                project.issues = newIssues;
+                project.save();
+                return res.status(200).send("deleted " + issueIdPassed._id);
+              }
 
-              let v = project.issues.findIndex((elem) => {
-                return elem._id.toString() === issueIdPassed._id;
-              });
-              console.log(v);
-              console.log(project.issues[v]);
-              var newIssues = project.issues.filter(function (value, index, arr) {
-                console.log(index)
-                console.log(v !== index)
-                return v !== index;
-              });
-              console.log(newIssues);
-              project.issues = newIssues;
-              project.save();
-              return res.status(200).send("issue deleted");
             }
-
-          }
-        });
+          });
+      } catch (err) {
+        return res.status(200).send("could not delete " + issueIdPassed._id);
+      }
     });
 
 
