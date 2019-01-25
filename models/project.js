@@ -10,8 +10,8 @@ const issueSchema = new mongoose.Schema(
             maxLength: 160
         },
         created_by: { type: String, required: true },
-        assigned_to: String,
-        status_text: String,
+        assigned_to: { type: String, default: "" },
+        status_text: { type: String, default: "" },
         created_on: { type: Date, default: Date.now() },
         updated_on: { type: Date, default: Date.now() },
         open: { type: Boolean, default: true }
