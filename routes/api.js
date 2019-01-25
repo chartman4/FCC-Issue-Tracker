@@ -37,7 +37,7 @@ module.exports = function (app) {
       try {
         var projectName = req.params.project;
         var query = req.query;
-
+        console.log(query);
         db.Project.findOne(
           { id: projectName },
           function (error, project) {
@@ -46,6 +46,9 @@ module.exports = function (app) {
             } else {
               var returnIssues = project.issues.filter(elem => {
                 if (
+                  (!query.hasOwnProperty('_id') ||
+                    ((query.hasOwnProperty('_id') && (query._id === elem._id.toString()))))
+                  &&
                   (!query.hasOwnProperty('open') ||
                     ((query.hasOwnProperty('open') && elem.open === (query.open.toLowerCase() === 'true'))))
                   &&
@@ -64,16 +67,13 @@ module.exports = function (app) {
                   ((!query.hasOwnProperty('status_text')) ||
                     (query.hasOwnProperty('status_text') && (query.status_text === elem.status_text)))
                   &&
-                  ((!query.hasOwnProperty('_id')) ||
-                    (query.hasOwnProperty('_id') && (query._id === elem._id)))
-                  &&
                   ((!query.hasOwnProperty('issue_title')) ||
                     (query.hasOwnProperty('issue_title') && (query.issue_title === elem.issue_title)))
                   &&
                   ((!query.hasOwnProperty('issue_text')) ||
                     (query.hasOwnProperty('issue_text') && (query.issue_text === elem.issue_text)))
                 ) {
-                  return elem;
+                  return true;
                 }
               });
               res.status(200).send(returnIssues);
