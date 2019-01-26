@@ -57,6 +57,7 @@ suite('Functional Tests', function () {
           issue_title: 'Title 2',
           issue_text: 'text 2',
           created_by: 'Functional Test - Required fields filled in',
+          status_text: 'In QA'
         })
         .end(function (err, res) {
           assert.equal(res.status, 200);
@@ -72,6 +73,10 @@ suite('Functional Tests', function () {
           assert.equal(res.body.issue_title, 'Title 2');
           assert.equal(res.body.issue_text, 'text 2');
           assert.equal(res.body.created_by, 'Functional Test - Required fields filled in');
+          assert.equal(res.body.status_text, 'In QA');
+          assert.isTrue(res.body.open);
+          assert.equal(res.body.assigned_to, '');
+
           done();
         });
     });
