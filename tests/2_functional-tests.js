@@ -31,6 +31,15 @@ suite('Functional Tests', function () {
         .end(function (err, res) {
           saved_id = res.body._id;
           assert.equal(res.status, 200);
+          assert.property(res.body, 'issue_title');
+          assert.property(res.body, 'issue_text');
+          assert.property(res.body, 'created_on');
+          assert.property(res.body, 'updated_on');
+          assert.property(res.body, 'created_by');
+          assert.property(res.body, 'assigned_to');
+          assert.property(res.body, 'open');
+          assert.property(res.body, 'status_text');
+          assert.property(res.body, '_id');
           assert.equal(res.body.issue_title, 'Title');
           assert.equal(res.body.issue_text, 'text');
           assert.equal(res.body.created_by, 'Functional Test - Every field filled in');
@@ -51,6 +60,15 @@ suite('Functional Tests', function () {
         })
         .end(function (err, res) {
           assert.equal(res.status, 200);
+          assert.property(res.body, 'issue_title');
+          assert.property(res.body, 'issue_text');
+          assert.property(res.body, 'created_on');
+          assert.property(res.body, 'updated_on');
+          assert.property(res.body, 'created_by');
+          assert.property(res.body, 'assigned_to');
+          assert.property(res.body, 'open');
+          assert.property(res.body, 'status_text');
+          assert.property(res.body, '_id');
           assert.equal(res.body.issue_title, 'Title 2');
           assert.equal(res.body.issue_text, 'text 2');
           assert.equal(res.body.created_by, 'Functional Test - Required fields filled in');
@@ -144,7 +162,7 @@ suite('Functional Tests', function () {
     test('One filter', function (done) {
       chai.request(server)
         .get('/api/issues/apitest')
-        .query({ issue_title: 'Title updated again' })
+        .query({ _id: saved_id })
         .end(function (err, res) {
           assert.equal(res.status, 200);
           assert.isArray(res.body);
@@ -164,7 +182,7 @@ suite('Functional Tests', function () {
     test('Multiple filters (test for multiple fields you know will be in the db for a return)', function (done) {
       chai.request(server)
         .get('/api/issues/apitest')
-        .query({ open: 'true', created_by: 'Functional Test - Every field filled in' })
+        .query({ open: 'true', assigned_to: 'Chai and Mocha' })
         .end(function (err, res) {
           assert.equal(res.status, 200);
           assert.isArray(res.body);

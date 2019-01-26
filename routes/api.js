@@ -24,7 +24,7 @@ function updateIssue(issue, updates) {
 };
 
 function sameDay(d1, d2) {
-  console.log(d2.setHours(0, 0, 0, 0));
+  d2.setHours(0, 0, 0, 0);
   return (moment(d1).isSame(moment(d2.toUTCString())));
 
 }
@@ -37,7 +37,6 @@ module.exports = function (app) {
       try {
         var projectName = req.params.project;
         var query = req.query;
-        console.log(query);
         db.Project.findOne(
           { id: projectName },
           function (error, project) {
@@ -182,7 +181,6 @@ module.exports = function (app) {
             if (err) { return res.status(500).send(err); }
             else {
               if (Object.keys(issueIdPassed).length === 0) {
-                console.log("no issueId");
                 res.status(200).send("_id error")
               } else {
                 let v = project.issues.findIndex((elem) => {
