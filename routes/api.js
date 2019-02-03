@@ -42,7 +42,9 @@ module.exports = function (app) {
           function (error, project) {
             if (error) {
               res.status(400).send(error);
-            } else {
+            } else if (project != null) {
+              console.log("Issues");
+              console.log(project);
               var returnIssues = project.issues.filter(elem => {
                 if (
                   (!query.hasOwnProperty('_id') ||
@@ -76,7 +78,8 @@ module.exports = function (app) {
                 }
               });
               res.status(200).send(returnIssues);
-            }
+            } else
+              res.status(200).send([]);
           }
         )
       }
